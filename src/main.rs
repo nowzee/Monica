@@ -1,7 +1,7 @@
 use rtshark;
 use std::collections::HashMap;
-
-static PCAP_FILE: &str = "chall.pcapng";
+use std::env;
+use std::process::exit;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 struct Protocol {
@@ -21,16 +21,23 @@ struct UniqueIp {
 /// * `file` - Modify the file to analyze.
 fn main() {
 
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        println!("Argument file is missing. <file>");
+        exit(0);
+    }
+
+    let file = Some(&args[1]).unwrap();
+
     let mut counts_pro: HashMap<Protocol, usize> = HashMap::new();
     let mut count_number_of_packets: usize = 0;
 
     let mut counts_ip: HashMap<UniqueIp, usize> = HashMap::new();
 
-
-
     // Creates a builder with needed tshark parameters
     let builder = rtshark::RTSharkBuilder::builder()
-        .input_path(PCAP_FILE);
+        .input_path(file);
 
     // Start a new TShark process
     let mut rtshark = match builder.spawn() {
