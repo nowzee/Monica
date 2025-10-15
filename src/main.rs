@@ -1,3 +1,5 @@
+mod modules;
+
 use rtshark;
 use std::collections::HashMap;
 use std::env;
@@ -20,7 +22,6 @@ struct UniqueIp {
 /// # Arguments
 /// * `file` - Modify the file to analyze.
 fn main() {
-
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
@@ -74,4 +75,6 @@ fn main() {
     }
 
     println!("\n\nNumber of packets: {}", count_number_of_packets);
+
+    modules::analyse_path::analyse_path();
 }
