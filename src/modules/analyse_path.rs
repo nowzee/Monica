@@ -59,12 +59,4 @@ pub fn analyse_path(
             println!();
         }
     }
-
-    println!("\nPROTOCOLS USED:");
-    let mut proto_vec: Vec<(&Protocol, &usize)> = counts_pro.iter().collect();
-    proto_vec.sort_by(|a, b| b.1.cmp(a.1));
-
-    for (proto, count) in proto_vec.iter() {
-        println!("  - {}: {} packets", proto.name, count);
-    }
 }
