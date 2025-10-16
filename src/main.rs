@@ -4,17 +4,8 @@ use rtshark;
 use std::collections::HashMap;
 use std::env;
 use std::process::exit;
-
-#[derive(Debug, PartialEq, Eq, Hash)]
-struct Protocol {
-    name: String,
-
-}
-
-#[derive(Debug, PartialEq, Eq, Hash)]
-struct UniqueIp {
-    src: String,
-}
+use rtshark::Packet;
+use modules::analyse_path::{Protocol, UniqueIp};
 
 
 /// Analyze the pcap file.
@@ -33,6 +24,7 @@ fn main() {
 
     let mut counts_pro: HashMap<Protocol, usize> = HashMap::new();
     let mut count_number_of_packets: usize = 0;
+    let mut layers: Option<Packet> = None;
 
     let mut counts_ip: HashMap<UniqueIp, usize> = HashMap::new();
 
@@ -48,6 +40,9 @@ fn main() {
 
     // Read packets until the end of the PCAP file
     while let Some(packet) = rtshark.read().unwrap() {
+        
+        layers = Option::from(packet.clone());
+        
         for layer in packet {
 
             let proto = Protocol {name: layer.name().to_string()};
@@ -64,17 +59,17 @@ fn main() {
         }
     };
 
-    for (protocol, size) in counts_pro {
+    for (protocol, size) in &counts_pro {
         println!("{:?} and count : {:?}", protocol.name, size);
     }
 
     println!("\n\n");
 
-    for (ip, size) in counts_ip {
+    for (ip, size) in &counts_ip {
         println!("{:?} and count : {:?}", ip.src, size);
     }
 
     println!("\n\nNumber of packets: {}", count_number_of_packets);
 
-    modules::analyse_path::analyse_path();
+    modules::analyse_path::analyse_path(counts_ip, counts_pro, layers.as_ref());
 }
