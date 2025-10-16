@@ -1,6 +1,7 @@
 /// In test and development, very basic.
 
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Protocol {
@@ -25,8 +26,8 @@ fn classify_threat(count: usize, threshold: f64) -> &'static str {
 
 pub fn analyse_path(
     counts_ip: HashMap<UniqueIp, usize>,
-    counts_pro: HashMap<Protocol, usize>,
-    _layers: Option<&rtshark::Packet>
+    _counts_pro: HashMap<Protocol, usize>,
+    file_path: &str,
 ) {
     println!("\n=== Path Analysis ===\n");
 
@@ -58,5 +59,37 @@ pub fn analyse_path(
             println!("   └─ Threat level: {}", classify_threat(**count, threshold));
             println!();
         }
+    }
+
+    let suspicious_set: HashSet<String> = suspicious_ips
+        .iter()
+        .map(|(ip, _)| ip.src.clone())
+        .collect();
+
+    let builder = rtshark::RTSharkBuilder::builder()
+        .input_path(file_path);
+
+    let mut rtshark = builder.spawn().unwrap();
+
+    while let Some(packet) = rtshark.read().unwrap() {
+        for layer in packet {
+            let mut src_ip: Option<String> = None;
+            let mut dst_ip: Option<String> = None;
+
+            for metadata in layer {
+                match metadata.name() {
+                    "ip.src" => src_ip = Some(metadata.value().to_string()),
+                    "ip.dst" => dst_ip = Some(metadata.value().to_string()),
+                    _ => {}
+                }
+            }
+
+            if let (Some(src), Some(dst)) = (src_ip, dst_ip) {
+                if suspicious_set.contains(&src) {
+                    println!("Suspicious source {} => destination {}", src, dst);
+                }
+            }
+        }
+
     }
 }

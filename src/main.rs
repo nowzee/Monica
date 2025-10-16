@@ -4,7 +4,6 @@ use rtshark;
 use std::collections::HashMap;
 use std::env;
 use std::process::exit;
-use rtshark::Packet;
 use modules::analyse_path::{Protocol, UniqueIp};
 
 
@@ -24,7 +23,6 @@ fn main() {
 
     let mut counts_pro: HashMap<Protocol, usize> = HashMap::new();
     let mut count_number_of_packets: usize = 0;
-    let mut layers: Option<Packet> = None;
 
     let mut counts_ip: HashMap<UniqueIp, usize> = HashMap::new();
 
@@ -40,8 +38,6 @@ fn main() {
 
     // Read packets until the end of the PCAP file
     while let Some(packet) = rtshark.read().unwrap() {
-        
-        layers = Option::from(packet.clone());
         
         for layer in packet {
 
@@ -71,5 +67,5 @@ fn main() {
 
     println!("\n\nNumber of packets: {}", count_number_of_packets);
 
-    modules::analyse_path::analyse_path(counts_ip, counts_pro, layers.as_ref());
+    modules::analyse_path::analyse_path(counts_ip, counts_pro, file);
 }
