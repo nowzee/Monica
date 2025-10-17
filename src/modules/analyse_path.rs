@@ -29,6 +29,8 @@ pub fn analyse_path(
     _counts_pro: HashMap<Protocol, usize>,
     file_path: &str,
 ) {
+
+    // This is a very basic analysis for testing and future development purposes..
     println!("\n=== Path Analysis ===\n");
 
     let total_packets: usize = counts_ip.values().sum();
@@ -75,6 +77,7 @@ pub fn analyse_path(
         let mut src_ip: Option<String> = None;
         let mut dst_ip: Option<String> = None;
         let mut domain_name: Option<String> = None;
+        let mut http_request: Option<String> = None;
 
         for layer in packet {
             for metadata in layer {
@@ -82,6 +85,7 @@ pub fn analyse_path(
                     "ip.src" => src_ip = Some(metadata.value().to_string()),
                     "ip.dst" => dst_ip = Some(metadata.value().to_string()),
                     "dns.qry.name" => domain_name = Some(metadata.value().to_string()),
+                    "http.request.full_uri"=> http_request = Some(metadata.value().to_string()),
                     _ => {}
                 }
             }
@@ -91,7 +95,11 @@ pub fn analyse_path(
             if suspicious_set.contains(&src) {
                 if let Some(domain) = &domain_name {
                     println!("Suspicious source {} => destination {} (domain: {})", src, dst, domain);
-                } else {
+                }
+                    else if let Some(request) = &http_request {
+                        println!("Suspicious source {} => destination {} (request: {})", src, dst, request);
+                    }
+                else {
                     println!("Suspicious source {} => destination {}", src, dst);
                 }
             }

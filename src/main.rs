@@ -38,7 +38,6 @@ fn main() {
 
     // Read packets until the end of the PCAP file
     while let Some(packet) = rtshark.read().unwrap() {
-        
         for layer in packet {
 
             let proto = Protocol {name: layer.name().to_string()};
