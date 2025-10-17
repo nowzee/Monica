@@ -72,24 +72,29 @@ pub fn analyse_path(
     let mut rtshark = builder.spawn().unwrap();
 
     while let Some(packet) = rtshark.read().unwrap() {
-        for layer in packet {
-            let mut src_ip: Option<String> = None;
-            let mut dst_ip: Option<String> = None;
+        let mut src_ip: Option<String> = None;
+        let mut dst_ip: Option<String> = None;
+        let mut domain_name: Option<String> = None;
 
+        for layer in packet {
             for metadata in layer {
                 match metadata.name() {
                     "ip.src" => src_ip = Some(metadata.value().to_string()),
                     "ip.dst" => dst_ip = Some(metadata.value().to_string()),
+                    "dns.qry.name" => domain_name = Some(metadata.value().to_string()),
                     _ => {}
-                }
-            }
-
-            if let (Some(src), Some(dst)) = (src_ip, dst_ip) {
-                if suspicious_set.contains(&src) {
-                    println!("Suspicious source {} => destination {}", src, dst);
                 }
             }
         }
 
+        if let (Some(src), Some(dst)) = (src_ip, dst_ip) {
+            if suspicious_set.contains(&src) {
+                if let Some(domain) = &domain_name {
+                    println!("Suspicious source {} => destination {} (domain: {})", src, dst, domain);
+                } else {
+                    println!("Suspicious source {} => destination {}", src, dst);
+                }
+            }
+        }
     }
 }
