@@ -33,7 +33,7 @@ pub fn analyse_path(
 
     let total_packets: usize = counts_ip.values().sum();
     let average = total_packets as f64 / counts_ip.len() as f64;
-    let threshold = average * 2.0; // IPs with twice the average number of packets
+    let threshold = average * 1.5; // IPs with twice the average number of packets
 
     println!("Statistics:");
     println!("  - Total packets: {}", total_packets);
