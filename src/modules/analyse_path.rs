@@ -78,6 +78,7 @@ pub fn analyse_path(
         let mut dst_ip: Option<String> = None;
         let mut domain_name: Option<String> = None;
         let mut http_request: Option<String> = None;
+        let mut time_request: Option<String> = None;
 
         for layer in packet {
             for metadata in layer {
@@ -86,6 +87,7 @@ pub fn analyse_path(
                     "ip.dst" => dst_ip = Some(metadata.value().to_string()),
                     "dns.qry.name" => domain_name = Some(metadata.value().to_string()),
                     "http.request.full_uri"=> http_request = Some(metadata.value().to_string()),
+                    "frame.time_utc" => time_request = Some(metadata.value().to_string()),
                     _ => {}
                 }
             }
@@ -94,13 +96,13 @@ pub fn analyse_path(
         if let (Some(src), Some(dst)) = (src_ip, dst_ip) {
             if suspicious_set.contains(&src) {
                 if let Some(domain) = &domain_name {
-                    println!("Suspicious source {} => destination {} (domain: {})", src, dst, domain);
+                    println!("({}) Suspicious source {} => destination {} (domain: {})",time_request.unwrap(),  src, dst, domain);
                 }
                     else if let Some(request) = &http_request {
-                        println!("Suspicious source {} => destination {} (request: {})", src, dst, request);
+                        println!("({}) Suspicious source {} => destination {} (request: {})",time_request.unwrap(), src, dst, request);
                     }
                 else {
-                    println!("Suspicious source {} => destination {}", src, dst);
+                    println!("({}) Suspicious source {} => destination {}",time_request.unwrap(), src, dst);
                 }
             }
         }
