@@ -3,12 +3,12 @@
 use std::collections::HashMap;
 use std::collections::HashSet;
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash)]
 pub struct Protocol {
     pub name: String,
 }
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash)]
 pub struct UniqueIp {
     pub src: String,
 }
