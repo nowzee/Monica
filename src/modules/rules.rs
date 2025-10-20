@@ -1,11 +1,6 @@
 // Network Rule Detection
 pub struct NetworkRule {
-    pub ttl: u8,
-    pub protocol: String,
-    pub src_ip: String,
-    pub dst_ip: String,
-    pub src_port: u16,
-    pub dst_port: u16,
+    pub ttl: u8
 }
 
 pub struct ICMP {
