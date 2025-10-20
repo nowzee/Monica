@@ -10,3 +10,9 @@ To use monica before the installation, you need to install tshark and after you 
 ````bash
 cargo build --release
 ````
+
+# Usage
+
+````bash
+./target/release/Monica.exe yourpcapfile.pcap
+````
