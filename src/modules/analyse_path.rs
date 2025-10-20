@@ -101,29 +101,25 @@ fn check_icmp_packet(metadata: &rtshark::Metadata) {
     }
 }
 
-fn process_metadata(packet_info: &mut PacketInfo, metadata: &rtshark::Metadata) {
-    match metadata.name() {
-        "ip.src" => packet_info.src_ip = Some(metadata.value().to_string()),
-        "ip.dst" => packet_info.dst_ip = Some(metadata.value().to_string()),
-        "dns.qry.name" => packet_info.domain_name = Some(metadata.value().to_string()),
-        "http.request.full_uri" => packet_info.http_request = Some(metadata.value().to_string()),
-        "frame.time_utc" => packet_info.time_request = Some(metadata.value().to_string()),
-        "ip.ttl" => {
-            if let Ok(ttl_value) = metadata.value().parse::<u8>() {
-                packet_info.ttl = Some(ttl_value);
-            }
-        }
-        _ => {}
-    }
-}
-
 fn extract_packet_info(packet: rtshark::Packet) -> PacketInfo {
     let mut packet_info = PacketInfo::new();
 
     for layer in packet {
         for metadata in layer {
             // check_icmp_packet(&metadata);
-            process_metadata(&mut packet_info, &metadata);
+            match metadata.name() {
+                "ip.src" => packet_info.src_ip = Some(metadata.value().to_string()),
+                "ip.dst" => packet_info.dst_ip = Some(metadata.value().to_string()),
+                "dns.qry.name" => packet_info.domain_name = Some(metadata.value().to_string()),
+                "http.request.full_uri" => packet_info.http_request = Some(metadata.value().to_string()),
+                "frame.time_utc" => packet_info.time_request = Some(metadata.value().to_string()),
+                "ip.ttl" => {
+                    if let Ok(ttl_value) = metadata.value().parse::<u8>() {
+                        packet_info.ttl = Some(ttl_value);
+                    }
+                }
+                _ => {}
+            }
         }
     }
 
