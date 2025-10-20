@@ -176,7 +176,7 @@ fn analyse_packets(file_path: &str, suspicious_set: HashSet<String>) {
 
     let mut os_seen: HashSet<CheckOs> = HashSet::new();
 
-    println!("=== OS Detection ===");
+    println!("=== OS Detection ===\n");
     while let Some(packet) = rtshark.read().expect("Failed to read packet") {
         let packet_info = extract_packet_info(packet);
         handle_os_detection(&packet_info, &mut os_seen);
@@ -186,8 +186,8 @@ fn analyse_packets(file_path: &str, suspicious_set: HashSet<String>) {
         let builder = rtshark::RTSharkBuilder::builder().input_path(file_path);
         let mut rtshark = builder.spawn().unwrap();
 
-        println!("=== Suspicious traffic ===");
-        while let Some(packet) = rtshark.read().expect("Failed to read packet (Suspicious pass)") {
+        println!("\n=== Suspicious traffic ===");
+        while let Some(packet) = rtshark.read().unwrap() {
             let packet_info = extract_packet_info(packet);
             log_suspicious_traffic(&packet_info, &suspicious_set);
         }
