@@ -15,5 +15,5 @@ cargo build --release
 # Usage
 
 ````bash
-./target/release/Monica.exe yourpcapfile.pcap
+./target/release/Monica.exe yourpcapfile.pcapng
 ````
