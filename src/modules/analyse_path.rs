@@ -246,6 +246,8 @@ fn log_suspicious_traffic(packet_info: &PacketInfo, suspicious_set: &HashSet<Str
     }
 }
 
+
+/// Not optimised, need a hashmap or vec
 fn analyse_packets(file_path: &str, suspicious_set: HashSet<String>) {
     let builder = rtshark::RTSharkBuilder::builder().input_path(file_path);
     let mut rtshark = builder.spawn().unwrap();
