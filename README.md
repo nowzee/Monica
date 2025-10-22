@@ -5,6 +5,9 @@
 Monica is a tool to capture and analyse network logs,event like wireshark or elk
 to find vulnerabilities, attack path and compromission.
 
+> [!WARNING]  
+> The tool is in development and not ready for production some bugs can be present and the program its not stable and not optimized.
+
 # Installation
 To use monica before the installation, you need to install tshark and after you can build.
 
