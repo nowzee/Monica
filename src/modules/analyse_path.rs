@@ -2,10 +2,22 @@
 
 use std::collections::{HashMap, HashSet};
 use sha2::{Sha256, Digest};
+use std::sync::OnceLock;
 
 #[path = "../modules/rules.rs"]
 mod rules;
 use rules::{ICMP, NetworkEvent};
+
+static DEBUG_CHAIN: OnceLock<bool> = OnceLock::new();
+
+
+pub fn set_debug_chain(value: bool) {
+    DEBUG_CHAIN.set(value).unwrap();
+}
+
+pub fn get_debug_chain() -> bool {
+    *DEBUG_CHAIN.get().unwrap_or(&false)
+}
 
 #[derive(PartialEq, Eq, Hash)]
 pub struct Protocol {
@@ -260,10 +272,9 @@ fn analyse_packets(file_path: &str, suspicious_set: HashSet<String>) {
         handle_os_detection(&packet_info, &mut os_seen);
     }
 
-    {
+    if get_debug_chain() {
         let builder = rtshark::RTSharkBuilder::builder().input_path(file_path);
         let mut rtshark = builder.spawn().unwrap();
-
         println!("\n=== Suspicious traffic ===");
         while let Some(packet) = rtshark.read().unwrap() {
             let packet_info = extract_packet_info(packet);

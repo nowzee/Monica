@@ -20,6 +20,22 @@ fn main() {
     }
 
     let file = Some(&args[1]).unwrap();
+    let mut debug_chain = false;
+
+    for arg in args.iter().skip(1) {
+        match arg.as_str() {
+            "--debug-chain" => debug_chain = true,
+            "--help" => {
+                println!("\nUsage: monica <file>");
+                println!("\nOptions");
+                println!("  --debug-chain   Enable debug mode but more slow.");
+                exit(0);
+            }
+            &_ => {}
+        }
+    }
+
+    modules::analyse_path::set_debug_chain(debug_chain);
 
     let mut counts_pro: HashMap<Protocol, usize> = HashMap::new();
     let mut count_number_of_packets: usize = 0;
