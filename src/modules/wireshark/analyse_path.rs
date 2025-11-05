@@ -4,7 +4,7 @@ use std::collections::{HashMap, HashSet};
 use sha2::{Sha256, Digest};
 use std::sync::OnceLock;
 
-#[path = "../modules/rules.rs"]
+#[path = "../../modules/rules.rs"]
 mod rules;
 use rules::{ICMP, NetworkEvent};
 

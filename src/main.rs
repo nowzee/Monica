@@ -4,7 +4,7 @@ use rtshark;
 use std::collections::HashMap;
 use std::env;
 use std::process::exit;
-use modules::analyse_path::{Protocol, UniqueIp};
+use modules::wireshark::analyse_path::{Protocol, UniqueIp, set_debug_chain, analyse_path};
 
 
 /// Analyze the pcap file.
@@ -35,7 +35,7 @@ fn main() {
         }
     }
 
-    modules::analyse_path::set_debug_chain(debug_chain);
+    set_debug_chain(debug_chain);
 
     let mut counts_pro: HashMap<Protocol, usize> = HashMap::new();
     let mut count_number_of_packets: usize = 0;
@@ -82,5 +82,5 @@ fn main() {
 
     println!("\n\nNumber of packets: {}", count_number_of_packets);
 
-    modules::analyse_path::analyse_path(counts_ip, counts_pro, file);
+    analyse_path(counts_ip, counts_pro, file);
 }
