@@ -29,6 +29,8 @@ fn main() {
                 println!("\nUsage: monica <file>");
                 println!("\nOptions");
                 println!("  --debug-chain   Enable debug mode but more slow.");
+                println!("  --mode          wireshark");
+                println!("  --help          Show this help message and exit.\n\n");
                 exit(0);
             }
             &_ => {}
