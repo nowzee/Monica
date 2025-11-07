@@ -7,19 +7,29 @@ use std::process::exit;
 use modules::wireshark::analyse_path::{Protocol, UniqueIp, set_debug_chain, analyse_path};
 
 
-/// Analyze the pcap file.
-///
-/// # Arguments
-/// * `file` - Modify the file to analyze.
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     let mut debug_chain = false;
     let mut mode: String = "None".to_string();
 
-    if args.len() < 2 {
-        println!("Argument file is missing. <file>");
+    if args.contains(&"--help".to_string()) {
+        println!("\nUsage: ./Monica <file> --mode wireshark");
+        println!("  <file>          The file to analyze.");
+        println!("\nMonica is a tool to find attack path and more..");
+        println!("\nOptions:");
+        println!("  --debug-chain   Enable debug mode but more slow.");
+        println!("  --mode          wireshark, soon autodetect mode by default.");
+        println!("  --help          Show this help message and exit.\n\n");
         exit(0);
+    }
+
+
+    if args.len() == 1 {
+        println!("\nMonica: error: the following arguments are required: <file>, --mode");
+        exit(0);
+    } else if args.len() < 2 {
+        println!("Argument file is missing. <file>");
     }
 
     if !args.iter().any(|arg| arg == "--mode") {
@@ -45,14 +55,6 @@ fn main() {
     for arg in args.iter().skip(1) {
         match arg.as_str() {
             "--debug-chain" => debug_chain = true,
-            "--help" => {
-                println!("\nUsage: monica <file> <--mode>");
-                println!("\nOptions");
-                println!("  --debug-chain   Enable debug mode but more slow.");
-                println!("  --mode          wireshark");
-                println!("  --help          Show this help message and exit.\n\n");
-                exit(0);
-            }
             &_ => {}
         }
     }
