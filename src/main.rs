@@ -1,6 +1,6 @@
 mod modules;
 
-use rtshark;
+use rtshark::RTSharkBuilder;
 use std::collections::HashMap;
 use std::env;
 use std::process::exit;
@@ -68,7 +68,7 @@ fn main() {
         let mut counts_ip: HashMap<UniqueIp, usize> = HashMap::new();
 
         // Creates a builder with needed tshark parameters
-        let builder = rtshark::RTSharkBuilder::builder()
+        let builder = RTSharkBuilder::builder()
             .input_path(file);
 
         // Start a new TShark process

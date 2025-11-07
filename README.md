@@ -18,5 +18,13 @@ cargo build --release
 # Usage
 
 ````bash
-./target/release/Monica.exe yourpcapfile.pcapng
+./target/release/Monica.exe yourpcapfile.pcapng --mode wireshark
 ````
+## Options
+- `--mode` (Required) : Mode of analsye by default is wireshark, soon auto detect.
+- `--debug-chain` (Optional) : Debug the process of the chain.
+
+# Soon
+- `--report` : Generate a report in html, pdf and json format.
+
+Made with ❤️ by Insomnia
