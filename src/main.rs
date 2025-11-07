@@ -7,6 +7,9 @@ use std::process::exit;
 use modules::wireshark::analyse_path::{Protocol, UniqueIp, set_debug_chain, analyse_path};
 
 
+/*
+    entry point of the program, parse arguments and call the analyse_path function.
+*/
 fn main() {
     let args: Vec<String> = env::args().collect();
 
